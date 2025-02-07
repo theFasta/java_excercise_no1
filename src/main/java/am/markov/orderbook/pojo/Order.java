@@ -62,5 +62,13 @@ public class Order {
         this.price = order.price;
         this.quantity = order.quantity;
     }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
 
