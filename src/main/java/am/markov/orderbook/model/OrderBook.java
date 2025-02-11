@@ -25,13 +25,9 @@ public class OrderBook {
         this.symbol = symbol;
     }
 
-    public String getSymbol() {
-        return symbol;
-    }
-
     public void addAction(Order order) {
         // TODO [LV]: Add a private function to avoid repeating operations for buy / sell.
-        //  TODO [AF] Yes, in refactoring, I would have encapsulated the two operations in a single method, like I did with "edit" operation incapsulated with the computeNewQuantity() method below
+        //  TODO [AF] Yes, in refactoring, I would have encapsulated the two operations in a single method, like I did with "edit" operation encapsulated with the computeNewQuantity() method below
         if (order.isBuy()) {
             // TODO [LV]: The method put in a Java map is adding the element if it doesn't exist or override the value if exists with the same key.
             // TIPS: What about using put method with getOrDefault on actual quantity, and add the order quantity?
@@ -68,7 +64,7 @@ public class OrderBook {
     }
 
     // TODO [LV]: What about using remove and add instead of re-writing it?
-    // TODO [AF]: It's another way of handling it, it is actually a cleaner method of doing it without any hassle of double checking for existance. Will do in refactoring
+    // TODO [AF]: It's another way of handling it, it is actually a cleaner method of doing it without any hassle of double checking for existence. Will do in refactoring
     // TODO [AF]: I actually have not very clear if the value just must be updated with new one or must be recalculated (as I did)
     private void computeNewQuantity(TreeMap<Integer, Integer> opsQuantitiesIndexedByPrice, Order oldIndexedOrder, Order newOrder) {
 
@@ -109,24 +105,21 @@ public class OrderBook {
             return false;
     }
 
-    private void doRemoveFromStructure(TreeMap<Integer, Integer> buyOpsQuantitiesIndexedByPrice, Order orderToChange) {
-        buyOpsQuantitiesIndexedByPrice.compute(orderToChange.getPrice(), (k, oldQuantity) -> oldQuantity - orderToChange.getQuantity());
-        if (buyOpsQuantitiesIndexedByPrice.get(orderToChange.getPrice()) <= 0) {
-            buyOpsQuantitiesIndexedByPrice.remove(orderToChange.getPrice());
-        }
+    private void doRemoveFromStructure(TreeMap<Integer, Integer> indexedStructure, Order orderToChange) {
+        int newQuantity = indexedStructure.getOrDefault(orderToChange.getPrice(), 0) - orderToChange.getQuantity();
+        if (newQuantity > 0)
+            indexedStructure.put(orderToChange.getPrice(), newQuantity);
+        else
+            indexedStructure.remove(orderToChange.getPrice());
     }
 
     public void print() {
         System.out.println("\n----------------------------------\n");
         System.out.println("OrderBook: " + symbol);
         System.out.println("BuyOps:");
-        buyOpsQuantitiesIndexedByPrice.forEach((price, quantity) -> {
-            System.out.println("Price: " + price + " Quantity: " + quantity);
-        });
+        buyOpsQuantitiesIndexedByPrice.forEach((price, quantity) -> System.out.println("Price: " + price + " Quantity: " + quantity));
         System.out.println("\nSellOps:");
-        sellOpsQuantitiesIndexedByPrice.forEach((price, quantity) -> {
-            System.out.println("Price: " + price + " Quantity: " + quantity);
-        });
+        sellOpsQuantitiesIndexedByPrice.forEach((price, quantity) -> System.out.println("Price: " + price + " Quantity: " + quantity));
         System.out.println("\n----------------------------------\n");
     }
 }
