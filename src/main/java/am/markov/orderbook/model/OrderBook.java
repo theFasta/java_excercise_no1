@@ -35,14 +35,19 @@ public class OrderBook {
         if (order.isBuy()) {
             // TODO [LV]: The method put in a Java map is adding the element if it doesn't exist or override the value if exists with the same key.
             // TIPS: What about using put method with getOrDefault on actual quantity, and add the order quantity?
-            // TODO [AF]: Maybe i misunderstood the mechanics, which i implied of not just "overriding" the value contained @ the price index, but recalculate. If it's just an override, it is even easier
-            int newQuantity = buyOpsQuantitiesIndexedByPrice.getOrDefault(order.getPrice(), 0) + order.getQuantity();
-            buyOpsQuantitiesIndexedByPrice.put(order.getPrice(), newQuantity);
+            // TODO [AF]: Maybe i misunderstood the mechanics, which i implied of not just "overriding" the value
+            //  contained @ the price index, but recalculate. If it's just an override, it is even easier. For now, i'll stick to older recalculate method
+
+            addQuantityToStructure(buyOpsQuantitiesIndexedByPrice, order);
         } else {
-            int newQuantity = sellOpsQuantitiesIndexedByPrice.getOrDefault(order.getPrice(), 0) + order.getQuantity();
-            sellOpsQuantitiesIndexedByPrice.put(order.getPrice(), newQuantity);
+            addQuantityToStructure(sellOpsQuantitiesIndexedByPrice, order);
         }
         ordersIndex.put(order.getOrderId(), order);
+    }
+
+    private void addQuantityToStructure(TreeMap<Integer, Integer> indexedStructure, Order order) {
+        int newQuantity = indexedStructure.getOrDefault(order.getPrice(), 0) + order.getQuantity();
+        indexedStructure.put(order.getPrice(), newQuantity);
     }
 
     public Boolean edit(Order order) {
