@@ -82,11 +82,7 @@ public class OrderBook {
         // If contained we need to sum the new value to the old one, otherwise we'll just set a new <key,value> tuple
         int newQuantity = opsQuantitiesIndexedByPrice.getOrDefault(oldIndexedOrder.getPrice(), 0) + oldIndexedOrder.getQuantity();
         opsQuantitiesIndexedByPrice.put(newOrder.getPrice(), newQuantity);
-//        if (opsQuantitiesIndexedByPrice.containsKey(newOrder.getPrice())) {
-//            opsQuantitiesIndexedByPrice.compute(oldIndexedOrder.getPrice(), (k, oldQuantity) -> oldQuantity + oldIndexedOrder.getQuantity());
-//        } else {
-//            opsQuantitiesIndexedByPrice.put(oldIndexedOrder.getPrice(), oldIndexedOrder.getQuantity());
-//        }
+
         if (opsQuantitiesIndexedByPrice.get(oldIndexedOrder.getPrice()) <= 0) {
             opsQuantitiesIndexedByPrice.remove(oldIndexedOrder.getPrice());
         }
